@@ -3,9 +3,14 @@
     <head>
         <meta charset="utf-8">
         <title></title>
+        <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+        <link rel="stylesheet" href="/static/styles.css" type="text/css">
+
     </head>
     <body>
-        <h1> Welcome User!</h1>
-        <a href="/logout">Logout</a>
+        <h1 style="font-size: 50px; text-align: center;font-family: Lato"> Welcome {{session['name']}}</h1>
+        <a href="/file" style="text-align: center;margin-bottom: 20px;background-color: #3498DB" class="btn btn-primary btn-large btn-block" >Upload Receipt</a>
+        <a href="/view" style="text-align: center;margin-bottom: 20px;background-color: #3498DB" class="btn btn-primary btn-large btn-block" >View Receipts</a>
+        <a href="/logout" style="text-align: center;margin-bottom: 20px;background-color: #3498DB" class="btn btn-primary btn-large btn-block" >Logout</a>
     </body>
 </html>

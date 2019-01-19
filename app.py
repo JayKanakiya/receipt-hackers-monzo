@@ -54,13 +54,14 @@ def home():
     )
 
     mycursor = mydb.cursor()
-    sql1= "SELECT uname from user where pass = %s"
+    sql1= "SELECT uname,name from user where pass = %s"
     val=(passwd, )
     mycursor.execute(sql1,val)
 
     myresult = mycursor.fetchone()
     if(myresult!=None):
-        print(myresult[0])
+        print(myresult)
+        session['name'] = myresult[1]
         if myresult[0]==username:
             session['logged_in'] = True
             return render_template('home.html')
@@ -77,6 +78,20 @@ def logout():
     session['logged_in'] = False
     return land()
 
+@app.route('/upload',methods=['POST','GET'])
+def upload():
+    if request.method == 'POST':
+      f = request.files['file']
+      f.save(secure_filename(f.filename))
+      return 'file uploaded successfully'
+
+@app.route('/view')
+def view():
+    return render_template('view.htmlS')
+
+@app.route('/file')
+def file():
+    return render_template('upload.html')
 if __name__ == "__main__":
     app.secret_key = os.urandom(12)
     app.run(debug=True, port=0000)
