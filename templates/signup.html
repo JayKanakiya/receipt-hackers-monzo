@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="/static/styles.css" type="text/css">
 {% block body %}
-<form action="{{ url_for('login') }}" method="POST">
+<form action="/verifyDetails" method="POST">
 <div class="login">
 <div class="login-screen">
 <div class="app-title">
@@ -20,7 +20,7 @@
 <div class="control-group">
 	<input type="password" class="login-field" value="" placeholder="Password" name="password">
 <label class="login-field-icon fui-lock" for="password"></label></div>
-<input type="submit" value="Register" class="btn btn-primary btn-large btn-block">
+<input style="background-color:#3498DB;" type="submit" value="Register" class="btn btn-primary btn-large btn-block">
 
 </div>
 </div>
