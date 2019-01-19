@@ -27,20 +27,29 @@ def parse_text(text_list):
         if check_if_price(text[0]):
             value = float(text[0])
 
-            item = ""
+        elif check_if_price(text[0][1:]):
+            value = float(text[0][1:])
 
-            value_index = text_list.index(text)
-            y_position = ast.literal_eval(text[1][0])[1]
+        else:
+            continue
 
-            while value_index > 0:
-                value_index -= 1
-                previous_text = text_list[value_index]
-                previous_y_position = ast.literal_eval(previous_text[1][0])[1]
+        print(value)
 
-                if previous_y_position > y_position - 10:
-                    item = previous_text[0] + " " + item
-                
-            item_list.append([item, value])
+        item = ""
+
+        value_index = text_list.index(text)
+        y_position = ast.literal_eval(text[1][0])[1]
+
+        while value_index > 0:
+            value_index -= 1
+            previous_text = text_list[value_index]
+            previous_y_position = ast.literal_eval(previous_text[1][0])[1]
+
+            if previous_y_position < y_position + 10 and previous_y_position > y_position - 10:
+                item = previous_text[0] + " " + item
+            
+        item_list.append([item, value])
+
 
     #print(item_list)
 
@@ -65,7 +74,7 @@ def check_if_price(text_input):
     try: 
         value = float(text_input)
         deci2 = str(value).split('.')
-        if len(deci2[-1]) != 2:
+        if len(deci2[-1]) != 2 and len(deci2[-1]) != 1:
             raise ValueError
         return True
 

@@ -22,6 +22,13 @@ if __name__ == '__main__':
 
 	text_list = detect_text(content)
 
+	if text_list == []:
+
+		with io.open(args.input_file, 'rb') as image_file:
+			content = image_file.read()
+
+		text_list = detect_text(content)
+
 	information = parse_text(text_list)
 
 	print(information)
