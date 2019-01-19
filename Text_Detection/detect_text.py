@@ -9,12 +9,9 @@ from google.cloud import vision
 import argparse
 import io
 
-def detect_text(path):
+def detect_text(content):
     """Detects text in the file."""
     client = vision.ImageAnnotatorClient()
-
-    with io.open(path, 'rb') as image_file:
-        content = image_file.read()
 
     image = vision.types.Image(content=content)
 
@@ -22,19 +19,27 @@ def detect_text(path):
     texts = response.text_annotations
     print('Texts:')
 
+    output = []
+
     for text in texts:
         print('\n"{}"'.format(text.description))
-
         vertices = (['({},{})'.format(vertex.x, vertex.y)
                     for vertex in text.bounding_poly.vertices])
-
         print('bounds: {}'.format(','.join(vertices)))
+
+        output.append([text.description,vertices])
+    
+    return output
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('detect_file', help='The image for text detection.')
     args = parser.parse_args()
 
-    detect_text(args.detect_file)
+    path = args.detect_file
+
+    with io.open(path, 'rb') as image_file:
+        content = image_file.read()
+
+    detect_text(content)
     
-    #detect_text("Receipts/example2.jpg")

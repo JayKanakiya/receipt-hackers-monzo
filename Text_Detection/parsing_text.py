@@ -8,41 +8,56 @@ Created on Sat Jan 19 11:51:20 2019
 from google.cloud import vision
 import argparse
 import io
-
-def detect_text(path):
-    """Detects text in the file."""
-    client = vision.ImageAnnotatorClient()
-
-    with io.open(path, 'rb') as image_file:
-        content = image_file.read()
-
-    image = vision.types.Image(content=content)
-
-    response = client.text_detection(image=image)
-    texts = response.text_annotations
-    print('Texts:')
-
-    output = []
-
-    for text in texts:
-        print('\n"{}"'.format(text.description))
-        vertices = (['({},{})'.format(vertex.x, vertex.y)
-                    for vertex in text.bounding_poly.vertices])
-        print('bounds: {}'.format(','.join(vertices)))
-
-        output.append([text.description,vertices])
-    
-    return output
+import ast
 
 
 def parse_text(text_list):
 
+    information = {}
+
     merchant = text_list[0][0].split('\n', 1)[0]
-    print('Merchant: ', merchant)
 
+    information['Merchant'] = merchant
 
+    #print('Merchant: ', merchant)
 
+    item_list = []
 
+    for text in text_list:
+        if check_if_price(text[0]):
+            value = float(text[0])
+
+            item = ""
+
+            value_index = text_list.index(text)
+            y_position = ast.literal_eval(text[1][0])[1]
+
+            while value_index > 0:
+                value_index -= 1
+                previous_text = text_list[value_index]
+                previous_y_position = ast.literal_eval(previous_text[1][0])[1]
+
+                if previous_y_position > y_position - 10:
+                    item = previous_text[0] + " " + item
+                
+            item_list.append([item, value])
+
+    #print(item_list)
+
+    information['Item List'] = item_list
+
+    total = 0
+
+    for item in item_list:
+        if "TOTAL" in item[0]:
+            total = item[1]
+            item_list.remove(item)
+
+    information['Total'] = total
+
+    print(information)
+
+    return information
 
 
 def check_if_price(text_input):
@@ -56,17 +71,3 @@ def check_if_price(text_input):
     except ValueError:
         return False
 
-
-
-
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('detect_file', help='The image for text detection.')
-    args = parser.parse_args()
-
-    text_list = detect_text(args.detect_file)
-    parse_text(text_list)
-
-
-    
-    #detect_text("Receipts/example2.jpg")
