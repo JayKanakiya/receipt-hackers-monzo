@@ -89,7 +89,7 @@ def preprocess(image):
 	cnts = cv2.findContours(edged.copy(), cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
 	cnts = imutils.grab_contours(cnts)
 	cnts = sorted(cnts, key = cv2.contourArea, reverse = True)[:5]
-	 
+	
 	# loop over the contours
 	for c in cnts:
 		# approximate the contour

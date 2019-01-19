@@ -58,16 +58,28 @@ def parse_text(text_list):
 
     total = 0
 
+    tax = 0
+
+    to_remove = []
+
     for item in item_list:
-        if "TOTAL" in item[0].upper():
+        uppercase = item[0].upper()
+        if "TOTAL" in uppercase:
             total = item[1]
-            item_list.remove(item)
+            to_remove.append(item)
+
+        elif "VAT" in uppercase or "TAX" in uppercase:
+            tax = item[1]
+            to_remove.append(item)
+
+    for item in to_remove:
+        item_list.remove(item)
 
     information['Item List'] = item_list
 
     information['Total'] = total
 
-    #print(information)
+    information['Tax'] = tax
 
     return information
 
