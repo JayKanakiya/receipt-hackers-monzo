@@ -104,8 +104,11 @@ def preprocess(image):
 
 	# apply the four point transform to obtain a top-down
 	# view of the original image
-	warped = four_point_transform(orig, screenCnt.reshape(4, 2) * ratio)
-	 
+	try:
+		warped = four_point_transform(orig, screenCnt.reshape(4, 2) * ratio)
+	except UnboundLocalError:
+		warped = orig
+
 	# convert the warped image to grayscale, then threshold it
 	# to give it that 'black and white' paper effect
 	warped = cv2.cvtColor(warped, cv2.COLOR_BGR2GRAY)

@@ -6,10 +6,6 @@ from parsing_text import parse_text
 import cv2
 import io
 
-
-
-
-
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument('input_file', help='The image for text detection.')

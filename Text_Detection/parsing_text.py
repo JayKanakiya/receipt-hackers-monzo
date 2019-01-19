@@ -48,14 +48,15 @@ def parse_text(text_list):
 
     total = 0
 
-    for item in item_list:
-        if "TOTAL" in item[0]:
+    for item in reversed(item_list):
+        if "TOTAL" in item[0].upper():
             total = item[1]
             item_list.remove(item)
+            break
 
     information['Total'] = total
 
-    print(information)
+    #print(information)
 
     return information
 
