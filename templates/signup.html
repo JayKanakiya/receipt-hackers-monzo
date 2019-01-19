@@ -1,0 +1,29 @@
+<link rel="stylesheet" href="/static/styles.css" type="text/css">
+{% block body %}
+<form action="{{ url_for('login') }}" method="POST">
+<div class="login">
+<div class="login-screen">
+<div class="app-title">
+<h1>Register</h1>
+</div>
+<div class="login-form">
+	<div class="control-group">
+		<input type="text" class="login-field" value="" placeholder="Name" name="name">
+	<label class="login-field-icon fui-user" for="name"></label></div>
+
+	<div class="control-group">
+		<input type="email" class="login-field" value="" placeholder="Email" name="email">
+	<label class="login-field-icon fui-user" for="email"></label></div>
+<div class="control-group">
+	<input type="text" class="login-field" value="" placeholder="Username" name="username">
+<label class="login-field-icon fui-user" for="username"></label></div>
+<div class="control-group">
+	<input type="password" class="login-field" value="" placeholder="Password" name="password">
+<label class="login-field-icon fui-lock" for="password"></label></div>
+<input type="submit" value="Register" class="btn btn-primary btn-large btn-block">
+
+</div>
+</div>
+</div>
+</form>
+{% endblock %}
