@@ -6,6 +6,28 @@ from parsing_text import parse_text
 import cv2
 import io
 
+
+def receipt_parse(image):
+
+	preprocessed_image = preprocess(image)
+
+	cv2.imwrite("temp.jpg", preprocessed_image);
+
+	with io.open("temp.jpg", 'rb') as image_file:
+		content = image_file.read()
+
+	if text_list == []:
+
+		text_list = detect_text(image)
+
+	information = parse_text(text_list)
+
+	return information
+
+
+
+
+
 if __name__ == '__main__':
 	parser = argparse.ArgumentParser()
 	parser.add_argument('input_file', help='The image for text detection.')

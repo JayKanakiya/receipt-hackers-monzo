@@ -33,7 +33,7 @@ def parse_text(text_list):
         else:
             continue
 
-        print(value)
+        #print(value)
 
         item = ""
 
@@ -47,21 +47,23 @@ def parse_text(text_list):
 
             if previous_y_position < y_position + 10 and previous_y_position > y_position - 10:
                 item = previous_text[0] + " " + item
+
+        if value == 0 or item == "":
+            continue
             
         item_list.append([item, value])
 
 
     #print(item_list)
 
-    information['Item List'] = item_list
-
     total = 0
 
-    for item in reversed(item_list):
+    for item in item_list:
         if "TOTAL" in item[0].upper():
             total = item[1]
             item_list.remove(item)
-            break
+
+    information['Item List'] = item_list
 
     information['Total'] = total
 
@@ -72,6 +74,8 @@ def parse_text(text_list):
 
 def check_if_price(text_input):
     try: 
+        if text_input.isdigit():
+            raise ValueError
         value = float(text_input)
         deci2 = str(value).split('.')
         if len(deci2[-1]) != 2 and len(deci2[-1]) != 1:
