@@ -142,6 +142,29 @@ def connect_monzo(x1=None):
     return redirectHome()
     # return "Check Monzo - uploaded"
 
+
+@app.route('/view')
+def view():
+    info = receipt_parse('Receipts/example8.jpg')
+    return render_template('view.html', result = info)
+
+@app.route('/updatedReceipt', methods=['POST'])
+def update():
+    Merchant = request.form['Merchant']
+    j = 0
+    s= "item"
+    p = "price"
+    items = []
+    price = []
+    info1 = receipt_parse('Receipts/example8.jpg')
+    length = len(info1['ItemList'])
+    for j in range(1,length):
+        items.append(request.form[j])
+        price.append(request.form[100+j])
+    print(items)
+
+
+
 if __name__ == "__main__":
     app.secret_key = os.urandom(12)
     app.run(debug=True, port=0000)

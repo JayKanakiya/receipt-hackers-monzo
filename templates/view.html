@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>
+        <meta charset="utf-8">
+        <title>View Receipts</title>
+    </head>
+    <body>
+        <img src="Receipts/example8.jpg">
+        <form action = "/updatedReceipt" method="POST">
+        <h3> Merchant: <input type="text" value={{result['Merchant']}} name = "Merchant"></h3>
+        <h4> Items </h4>
+        <table>
+        {% for i in result['ItemList'] %}
+        {% set count = 1  %}
+        <tr>
+            <td><input type="text" value={{i[0]}}></td>
+            <td><input type="text" value={{i[1]}}></td>
+        </tr>
+        {% set count = count + 1 %}
+        {% endfor %}
+        <button value={{i}} name="num" type="submit">Submit</button>
+        </form>
+    </body>
+</html>
