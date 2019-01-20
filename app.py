@@ -1,7 +1,6 @@
 from flask import Flask
 from flask import Flask, flash, redirect, render_template, request, session, abort
 import os
-import pyrebase
 import mysql.connector
 
 
@@ -59,7 +58,9 @@ def home():
     mycursor.execute(sql1,val)
 
     myresult = mycursor.fetchone()
-    if(myresult!=None):
+    if myresult==None:
+        return login()
+    if myresult!=None:
         print(myresult)
         session['name'] = myresult[1]
         if myresult[0]==username:
@@ -71,6 +72,10 @@ def home():
         flash('wrong password!')
     return login()
 
+def redirectHome():
+    if session['logged_in'] == True:
+        return render_template('home.html')
+
 
 
 @app.route('/logout')
@@ -78,12 +83,23 @@ def logout():
     session['logged_in'] = False
     return land()
 
-@app.route('/upload',methods=['POST','GET'])
+@app.route('/upload',methods=['POST'])
 def upload():
-    if request.method == 'POST':
-      f = request.files['file']
-      f.save(secure_filename(f.filename))
-      return 'file uploaded successfully'
+    session['logged_in'] = True
+    APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+    target = os.path.join(APP_ROOT, 'images/')
+    print(target)
+
+    if not os.path.isdir(target):
+        os.mkdir(target)
+
+    for file in request.files.getlist("file"):
+        filename = file.filename
+        dest = '/'.join([target,'1.jpg'])
+        file.save(dest)
+        break
+
+    return redirectHome()
 
 @app.route('/view')
 def view():
