@@ -16,6 +16,8 @@ def receipt_parse(image):
 	with io.open("temp.jpg", 'rb') as image_file:
 		content = image_file.read()
 
+	text_list = detect_text(content)
+
 	if text_list == []:
 
 		text_list = detect_text(image)
