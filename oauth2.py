@@ -22,24 +22,24 @@ copy config-example.py to config.py, and configure your client credentials.")
 
 class OAuth2Client:
     ''' This auth flow implements the process of acquiring an access token from the
-        Monzo Third Party Developer API, as described in 
+        Monzo Third Party Developer API, as described in
         https://docs.monzo.com/#acquire-an-access-token
     '''
-    
+
     def __init__(self):
         self._is_confidential_client = config.MONZO_CLIENT_IS_CONFIDENTIAL
         # Your client should only be confidential if it is a backend application, with
         # OAuth secret hidden from the user.
         self._oauth_state = uuid.uuid4().hex
-        # OAuth state uses a randomised alphanumeric state to protect the client  
-        # browser from cross site forgery attacks. While we don't need it as a 
-        # command-line application, we still send a randomised state nevertheless 
+        # OAuth state uses a randomised alphanumeric state to protect the client
+        # browser from cross site forgery attacks. While we don't need it as a
+        # command-line application, we still send a randomised state nevertheless
         # to demonstrate.
-        
-    
+
+
     def start_auth(self):
         ''' Builds an auth URL to be used to initiate OAuth2 flow on the web OAuth portal. '''
-        
+
         oauth2_GET_params = {
             "client_id": config.MONZO_CLIENT_ID,
             "redirect_uri": config.MONZO_OAUTH_REDIRECT_URI,
@@ -50,11 +50,11 @@ class OAuth2Client:
             urllib.urlencode(oauth2_GET_params, doseq=True))
         print("Visit {} and follow email received to obtain your temporary authorization code...".format(request_url))
         self.wait_for_auth_flow()
-    
+
 
     def wait_for_auth_flow(self):
         ''' Parses the temporary authorization code returned from authenticating with Email login link. '''
-        
+
         callback_url = input("Once you have obtained the callback link by clicking the login button in your email, paste your callback URL here: ").strip()
         try:
             callback = urllib.urlparse(callback_url).query
@@ -68,14 +68,14 @@ class OAuth2Client:
             error("cannot find randomised auth state in callback URL")
         if callback_qs["state"].strip() != self._oauth_state:
             error("invalid randomised auth state in callback URL, did you use the most recent login link?")
-        
+
         self._auth_code = callback_qs["code"].strip()
         self.exchange_auth_code()
-    
-    
+
+
     def exchange_auth_code(self):
         '''Exchanges the temporary authorization code with an access token for the application. '''
-        
+
         if self._auth_code == "":
             error("no auth code, have you completed intial auth flow")
 
@@ -93,8 +93,13 @@ class OAuth2Client:
                 response.text))
 
         response_object = response.json()
+
+        # do not terminate the script and run this part
+        # run once and keep it running - while loop
+
+        # make it accept new json data in the loop
         if "access_token" in response_object:
-            print("Auth successful, access token received.") 
+            print("Auth successful, access token received.")
             self._access_token = response_object["access_token"]
 
             if "refresh_token" in response_object:
@@ -103,11 +108,11 @@ class OAuth2Client:
                 self._is_confidential_client = False
                 if config.MONZO_CLIENT_IS_CONFIDENTIAL:
                     print("Warning: this client is not registered as confidential, we will not be able to refresh token")
-    
+
 
     def refresh_access_token(self):
         ''' If we are a confidential client, we can refresh the access token to get a new one derived from the same OAuth
-            authorisation. 
+            authorisation.
         '''
         if not self._is_confidential_client:
             error("Not a confidential client, cannot refresh access token.")
@@ -123,7 +128,7 @@ class OAuth2Client:
         if response.status_code != 200:
             error("Token refreshed failed, bad status code returned: {} ({})".format(response.status_code,
                 response.text))
-        
+
         response_object = response.json()
         if "access_token" in response_object:
             self._access_token = response_object["access_token"]
@@ -134,14 +139,14 @@ class OAuth2Client:
         else:
             error("No refresh token returned in token refresh response")
         print("Token refreshed, new access token and refresh token recorded.")
-    
+
 
     def api_get(self, path, params_data):
         ''' Uses the access token to send a GET API call to the Monzo API. '''
 
         if path.startswith("/"):
             path = path[1:]
-        response = requests.get("https://{}/{}".format(config.MONZO_API_HOSTNAME, path), 
+        response = requests.get("https://{}/{}".format(config.MONZO_API_HOSTNAME, path),
             headers={"Authorization": "Bearer {}".format(self._access_token)},
             params=params_data)
 
@@ -155,13 +160,13 @@ class OAuth2Client:
 
         return True, resp
 
-    
+
     def api_post(self, path, params_data):
         ''' Uses the access token to send a POST API call to the Monzo API. '''
 
         if path.startswith("/"):
             path = path[1:]
-        response = requests.post("https://{}/{}".format(config.MONZO_API_HOSTNAME, path), 
+        response = requests.post("https://{}/{}".format(config.MONZO_API_HOSTNAME, path),
             headers={"Authorization": "Bearer {}".format(self._access_token)},
             data=params_data)
 
@@ -173,15 +178,15 @@ class OAuth2Client:
 
         if response.status_code != 200:
             return False, resp
-        
+
         return True, resp
-    
+
     def api_put(self, path, params_data):
         ''' Uses the access token to send a PUT API call to the Monzo API. '''
 
         if path.startswith("/"):
             path = path[1:]
-        response = requests.put("https://{}/{}".format(config.MONZO_API_HOSTNAME, path), 
+        response = requests.put("https://{}/{}".format(config.MONZO_API_HOSTNAME, path),
             headers={"Authorization": "Bearer {}".format(self._access_token)},
             data=params_data)
 
@@ -189,12 +194,12 @@ class OAuth2Client:
             resp = response.json()
         except json.decoder.JSONDecodeError:
             resp = response.text
-        
+
         if response.status_code != 200:
             return False, resp
 
         return True, resp
-    
+
 
     def test_api_call(self):
         ''' Sends a GET ping API call to the Monzo API to test the auth state. '''
@@ -203,7 +208,7 @@ class OAuth2Client:
         if not success:
             error("API test call failed, bad status code returned: {} ({})".format(response.status_code,
                 response))
-        
+
         print("API test call successful.")
         return response
 

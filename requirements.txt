@@ -1,3 +1,6 @@
 mysql-connector
 pyrebase
 requests
+opencv-python
+scikit-image
+imutils

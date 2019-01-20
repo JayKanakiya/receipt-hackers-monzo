@@ -1,7 +1,7 @@
 # Register your third party application on http://developers.monzo.com by logging in with your personal
 # Monzo account. Copy this file into config.py, and enter your credentials into the file.
-MONZO_CLIENT_ID = "oauth2client_YOUR_CLIENT_ID_HERE"
-MONZO_CLIENT_SECRET = "mnzpub.YOUR_CLIENT_SECRET_HERE"
+MONZO_CLIENT_ID = "oauth2client_acc_00009exXcgwfD8OeE9yVu5"
+MONZO_CLIENT_SECRET = "mnzpub.eyJhbGciOiJFUzI1NiIsInR5cCI6IkpXVCJ9.eyJlYiI6Ii9NL1gzdVdORmtiZ2dXQVVpZ3gxIiwianRpIjoiYWNjdG9rXzAwMDA5ZXhZbmwySVJSM2Y0WXhFVHgiLCJ0eXAiOiJhdCIsInYiOiI1In0.kjZmju9yFc25g1BTO2N9szMuqznsSvokjGwYsM0hdU6214h1l2vxjtrH2MgOTxWZ7aNsYEqjM4Od-wg5ivon7Q"
 
 # Configurations you should not need to change.
 MONZO_OAUTH_HOSTNAME = "auth.monzo.com"

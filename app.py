@@ -1,8 +1,14 @@
 from flask import Flask
 from flask import Flask, flash, redirect, render_template, request, session, abort
 import os
+from main import ReceiptsClient
+import config
+import json
 import mysql.connector
 
+# at the beginning of starting the app, authorize it
+client = ReceiptsClient()
+client.do_auth()
 
 app = Flask(__name__)
 
@@ -108,6 +114,30 @@ def view():
 @app.route('/file')
 def file():
     return render_template('upload.html')
+
+@app.route('/monzo')
+def connect_monzo():
+    x1 = json.dumps({
+                  "transaction_id": "tx_00009ezCURJniYB2dnnopt",
+                  "external_id": "test-receipt-3",
+                  "total": 1,
+                  "currency": "GBP",
+                  "items": [
+                    {
+                      "description": "Blueberries, 180p per kg",
+                      "quantity": 18.56,
+                      "unit": "kg",
+                      "amount": 700,
+                      "currency": "GBP"
+                    }
+                  ]
+                    }
+                    )
+    # client = ReceiptsClient()
+    # client.do_auth()
+    client._api_client.api_put("transaction-receipts/", x1)
+    return "Check Monzo - uploaded"
+
 if __name__ == "__main__":
     app.secret_key = os.urandom(12)
     app.run(debug=True, port=0000)
