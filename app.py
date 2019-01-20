@@ -11,6 +11,7 @@ client = ReceiptsClient()
 client.do_auth()
 
 app = Flask(__name__)
+app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 @app.route('/', methods=['GET','POST'])
 def land():
@@ -105,7 +106,7 @@ def upload():
         file.save(dest)
         break
 
-    return redirectHome()
+    return connect_monzo()
 
 @app.route('/view')
 def view():
@@ -116,27 +117,30 @@ def file():
     return render_template('upload.html')
 
 @app.route('/monzo')
-def connect_monzo():
-    x1 = json.dumps({
-                  "transaction_id": "tx_00009ezCURJniYB2dnnopt",
-                  "external_id": "test-receipt-3",
-                  "total": 1,
-                  "currency": "GBP",
-                  "items": [
-                    {
-                      "description": "Blueberries, 180p per kg",
-                      "quantity": 18.56,
-                      "unit": "kg",
-                      "amount": 700,
-                      "currency": "GBP"
-                    }
-                  ]
-                    }
-                    )
+def connect_monzo(x1=None):
+    if x1 is None:
+        x1 = json.dumps({
+                      "transaction_id": "tx_00009ezCURJniYB2dnnopt",
+                      "external_id": "test-receipt-3",
+                      "total": 1,
+                      "currency": "GBP",
+                      "items": [
+                        {
+                          "description": "Apples, 20p per kg",
+                          "quantity": 18.56,
+                          "unit": "kg",
+                          "amount": 700,
+                          "currency": "GBP"
+                        }
+                      ]
+                        }
+                        )
     # client = ReceiptsClient()
     # client.do_auth()
     client._api_client.api_put("transaction-receipts/", x1)
-    return "Check Monzo - uploaded"
+    flash('Uploaded to Monzo!')
+    return redirectHome()
+    # return "Check Monzo - uploaded"
 
 if __name__ == "__main__":
     app.secret_key = os.urandom(12)
