@@ -1,6 +1,6 @@
 <p align="center">
   <a href="" rel="noopener">
- <img width=200px src="./image.jpg" style=></a>
+ <img width=500px src="./image.jpg" style=></a>
 </p>
 <h2 align="center">Receipt Reader</h2>
 <p align="center">A Hack Cambridge 4D Project, parsing receipts to send on Monzo's API</p>
