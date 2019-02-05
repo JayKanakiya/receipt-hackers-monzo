@@ -3,8 +3,6 @@
  <img width=500px src="./image.jpg" style=></a>
 </p>
 <h2 align="center">Receipt Reader</h2>
-<p align="center">A Hack Cambridge 4D Project, parsing receipts to send on Monzo's API</p>
-
 
 ## What it does
 We've built a website that allows users to upload a photo of their receipts, and have the information update on their Monzo mobile app through the Monzo API.
